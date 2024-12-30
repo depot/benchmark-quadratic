@@ -1,0 +1,67 @@
+name: Benchmark
+
+on:
+  push: {}
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  build_images_depot:
+    runs-on: depot-ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - service: client
+            projectID: 9xhj5c1n4w
+          - service: api
+            projectID: fnhmg0kxgk
+          - service: connection
+            projectID: 3c2cd2dkxb
+          - service: files
+            projectID: nm7tsh18rq
+          - service: multiplayer
+            projectID: 044587jlx3
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+      - uses: depot/setup-action@v1
+      - uses: depot/build-push-action@v1
+        with:
+          context: ./upstream
+          file: ./upstream/quadratic-${{ matrix.service }}/Dockerfile
+          project: ${{ matrix.projectID }}
+          build-args: |
+            BUILDKIT_INLINE_CACHE=1
+
+  build_images_docker:
+    runs-on: depot-ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - service: client
+            projectID: 9xhj5c1n4w
+          - service: api
+            projectID: fnhmg0kxgk
+          - service: connection
+            projectID: 3c2cd2dkxb
+          - service: files
+            projectID: nm7tsh18rq
+          - service: multiplayer
+            projectID: 044587jlx3
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+      - uses: docker/setup-buildx-action@v1
+      - uses: docker/build-push-action@v2
+        with:
+          context: ./upstream
+          file: ./upstream/quadratic-${{ matrix.service }}/Dockerfile
+          build-args: |
+            BUILDKIT_INLINE_CACHE=1
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
