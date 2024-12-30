@@ -34,8 +34,6 @@ jobs:
           context: ./upstream
           file: ./upstream/quadratic-${{ matrix.service }}/Dockerfile
           project: ${{ matrix.projectID }}
-          build-args: |
-            BUILDKIT_INLINE_CACHE=1
 
   build_images_docker:
     runs-on: depot-ubuntu-latest
@@ -61,7 +59,5 @@ jobs:
         with:
           context: ./upstream
           file: ./upstream/quadratic-${{ matrix.service }}/Dockerfile
-          build-args: |
-            BUILDKIT_INLINE_CACHE=1
           cache-from: type=gha
           cache-to: type=gha,mode=max
