@@ -1,4 +1,4 @@
 [submodule "upstream"]
 	path = upstream
 	url = https://github.com/quadratichq/quadratic
-	branch = ayush/2075
+	branch = ai-prompt-logging
